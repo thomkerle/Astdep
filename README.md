@@ -1,5 +1,6 @@
 # Astdep
 
+Stands for Azure Stack Terraform Deployment (Create Once, Destroy Never)
 
 ## Goal
 The goal of this project is to provide code that can be used with Azure DevOps using one or more pipelines to deploy infrastructure to Azure Stack. In contrast to the usual Terraform approach, to parameterize and then deploy the resource templates, in this project the variables are used as an approach for dynamic configuration of the Terraform resource templates, with the aim of not having to use recurring templates again.
