@@ -20,6 +20,23 @@ Basic Requirements:
 - Azure Stack Enviroment to deploy Infrastructure
 - MSDN Subscription or some aequivalent to use Azure DevOps (former Visual Studio Online)
 
+## Documentation
+
+You will find useful to see the Wiki pages to see how the repository code can be used:
+https://github.com/thomkerle/Astdep/wiki
+
+You should probably start with the [Gettting started page](https://github.com/thomkerle/Astdep/wiki/Getting-started)
+
+## Contributing
+
+in discussion...
+
+## Changelog
+
+in progress...
+
+
+
 
 
 
