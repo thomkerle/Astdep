@@ -1,11 +1,3 @@
-# Here you add the personal information for your Azure account
-provider "azurerm" {
-   subscription_id = "xxx"
-   client_id       = "yyy"
-   client_secret   = "zzz"
-   tenant_id       = "ttt"
-}
-
 
 # Splits up the variables in module definition file
 resource "null_resource" "splitter" {
