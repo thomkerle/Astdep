@@ -48,10 +48,8 @@ resource "null_resource" "terraform-init" {
       working_dir = "../analyze/mdr{count.index}"
       command = "terraform init"
     }
-    depends_on = ["null_resource.movevariables"]
+    depends_on = ["null_resource.catotemplate"]
 }
-
-
 
 resource "null_resource" "terraform-apply" {
     count = length(var.module)-1
