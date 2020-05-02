@@ -48,7 +48,7 @@ resource "null_resource" "terraform-init" {
       working_dir = "../analyze/mdr{count.index}"
       command = "terraform init"
     }
-    depends_on = ["null_resource.catotemplate"]
+    depends_on = ["null_resource.cattotemplate"]
 }
 
 resource "null_resource" "terraform-apply" {
