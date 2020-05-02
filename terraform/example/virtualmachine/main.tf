@@ -1,36 +1,32 @@
 resource "azurerm_virtual_machine" "main" {
-  name                  = var.vm_def.vm_name
-  location              = var.vm_def.vm_location
-  resource_group_name   = var.vm_def.vm_resource_group_name
-  network_interface_ids = ["${azurerm_network_interface.main.id}"]
-  vm_size               = var.vm_def.vm_size
-
-  # Uncomment this line to delete the OS disk automatically when deleting the VM
-  # delete_os_disk_on_termination = true
-
-
-  # Uncomment this line to delete the data disks automatically when deleting the VM
-  # delete_data_disks_on_termination = true
-
+  count = length(var.virtual_machines)
+  
+  for_each = var.virtual_machines[count.index]
+  
+  name                  = each.value["name"]
+  location              = each.value["location"]
+  resource_group_name   = each.value["resource_group_name"]
+  network_interface_ids = each.value[""]
+  vm_size               = each.value["vm_size"]
 
   storage_image_reference {
-    publisher = var.vm_def.storage_image_publisher
-    offer     = var.vm_def.storage_image_offer
-    sku       = var.vm_def.storage_image_sku
-    version   = var.vm_def.storage_image_version
+    publisher = each.value["storage_image_reference_publisher"]
+    offer     = each.value["storage_image_reference_offer"]
+    sku       = each.value["storage_image_reference_sku"]
+    version   = each.value["storage_image_reference_version"]
   }
 
   storage_os_disk {
-    name              = var.vm_def.storage_disk_name
-    caching           = var.vm_def.storage_disk_caching
-    create_option     = var.vm_def.sotrage_disk_create_option
-    managed_disk_type = var.vm_def.storage_disk_managed_disk_typ
+    name              = each.value["storage_os_disk_name"]
+    caching           = each.value["storage_os_disk_caching"]
+    create_option     = each.value["storage_os_disk_create_option"]
+    managed_disk_type = each.value["storage_os_disk_managed_disk_type"]
   }
   
   os_profile {
-    computer_name  = var.vm_def.os_profile_computer_name
-    admin_username = var.vm_def.os_profile_admin_user_name
-    admin_password = var.vm_def.os_profile_admin_password
+    computer_name  = each.value["os_profile_computer_name"]
+    admin_username = each.value["os_profile_admin_username"]
+    admin_password = each.value["os_profile_admin_password"]
   }
 
   os_profile_linux_config {
@@ -38,15 +34,15 @@ resource "azurerm_virtual_machine" "main" {
   }
 
   dynamic "storage_data_disk" {
-    for_each = [for datadisk in var.vm_def.datadisks: {
-         name = datadisk.datadisk_name
-         caching = datadisk.datadisk_caching
-         create_option = datadisk.datadisk_create_option
-         disk_size_gb = datadisk.datadisk_disk_size_gb
-         lun = datadisk.datadisk_lun
+    for_each = [for datadisk in each.value["datadisks"]: {
+         name = datadisk.name
+         caching = datadisk.caching
+         create_option = datadisk.create_option
+         disk_size_gb = datadisk.disk_size_gb
+         lun = datadisk.lun
          # Optional 
          # write_accelerator_enabled = datadisk.datadisk_write_accelerator_enabled
-         managed_disk_type = datadisk.datadisk_managed_disk_type 
+         managed_disk_type = datadisk.managed_disk_type 
     }]
 
     content {
@@ -55,13 +51,9 @@ resource "azurerm_virtual_machine" "main" {
          create_option = storage_data_disk.value.create_option
          disk_size_gb = storage_data_disk.value.disk_size_gb
          lun = storage_data_disk.value.lun
-         # Optional 
-         # write_accelerator_enabled = storage_data_disk.datadisk_write_accelerator_enabled
          managed_disk_type = storage_data_disk.value.managed_disk_type
     }
-    
   }
 
-  tags = var.vm_def.vm_tags
-  depends_on = [azurerm_network_interface.main]
+  tags = each.value["tags"]
 }
