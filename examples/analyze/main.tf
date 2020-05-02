@@ -37,7 +37,7 @@ resource "null_resource" "cattotemplate" {
   count = length(var.module)-1
   provisioner "local-exec" {
     working_dir = "."
-    command = "cat ./analyze/templates/creationtmpls.tmpl ./analyze/mdr${count.index}/main.tf"
+    command = "cat ../analyze/templates/creationtmpls.tmpl >> ../analyze/mdr${count.index}/main.tf"
   }
   depends_on=["local_file.filecreator_2"]
 }
