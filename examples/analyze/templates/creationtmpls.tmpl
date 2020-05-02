@@ -4,8 +4,8 @@ data "template_file" "resource_resourcegroups" {
   vars = {
     templateText = <<EOT
       module "create-resource-groups" {
-          source = "to be defined"
-          resource_groups_list = "${var.definition["definitions"]}"    
+          source = "../../../../../../terraform/example/resourcegroups"
+          resource_groups = var.definition["definitions"]    
       }
     EOT  
   }
@@ -14,6 +14,6 @@ data "template_file" "resource_resourcegroups" {
 resource "local_file" "filecreator_1" {
   count = ${var.definition["deploy_target"] == "resourcegroups" ? 1 : 0} 
   content = "${element(data.template_file.resource_resourcegroups.*.rendered, count.index)}"
-  filename = "../analyze/mdr${count.index}/run/main.tf"
+  filename = "../run/main.tf"
   depends_on = ["data.template_file.resource_resourcegroups"]
 }
