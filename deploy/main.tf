@@ -35,3 +35,18 @@ resource "local_file" "filecreator" {
   depends_on = ["data.template_file.resourcetaskcreator"]
 }
 
+resource "null_resource" "terraform-init" {
+    provisioner "local-exec" {
+      working_dir = "../analyze"
+      command = "terraform init"
+    }
+    depends_on = ["local_file.filecreator"]
+}
+
+resource "null_resource" "terraform-apply" {
+    provisioner "local-exec" {
+      working_dir = "./analyze"
+      command = "terraform apply -auto-approve"
+    }    
+    depends_on = ["null_resource.terraform-init"]
+}
