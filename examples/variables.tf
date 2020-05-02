@@ -1,3 +1,2 @@
 variable "module" {
-    type = list
 }
