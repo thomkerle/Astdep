@@ -14,7 +14,7 @@ data "template_file" "resourcetaskcreator" {
   vars = {
     templateText = <<EOT
       module "create-resource-${count.index}" {
-        source = "../analyze/mdr${count.index}/run"
+        source = "./analyze/mdr${count.index}/run"
         definiton = local.definition
       }
       
@@ -30,21 +30,21 @@ data "template_file" "resourcetaskcreator" {
 resource "local_file" "filecreator" {
   count = length(var.module)-1
   content = "${element(data.template_file.resourcetaskcreator.*.rendered, count.index)}"
-  filename = "../analyze/mdr${count.index}/main.tf"
+  filename = "./analyze/mdr${count.index}/main.tf"
   depends_on = ["data.template_file.resourcetaskcreator"]
 }
 
 resource "null_resource" "movevariables" {
   provisioner "local-exec" {
     working_dir = "."
-    command = "cp terraform.tfvars ../analyze/terraform.tfvars"
+    command = "cp terraform.tfvars ./analyze/terraform.tfvars"
   }
   depends_on=["local_file.filecreator"]
 }
 
 resource "null_resource" "terraform-init" {
     provisioner "local-exec" {
-      working_dir = "../analyze"
+      working_dir = "./analyze"
       command = "terraform init"
     }
     depends_on = ["null_resource.movevariables"]
@@ -52,7 +52,7 @@ resource "null_resource" "terraform-init" {
 
 resource "null_resource" "terraform-apply" {
     provisioner "local-exec" {
-      working_dir = "../analyze"
+      working_dir = "./analyze"
       command = "terraform apply -auto-approve"
     }    
     depends_on = ["null_resource.terraform-init"]
