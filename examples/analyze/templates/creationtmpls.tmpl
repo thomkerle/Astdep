@@ -1,0 +1,19 @@
+data "template_file" "resource_resourcegroups" {
+  count = ${var.definition["deploy_target"] == "resourcegroups" ? 1 : 0} 
+  template = "$${templateText}"
+  vars = {
+    templateText = <<EOT
+      module "create-resource-groups" {
+          source = "to be defined"
+          resource_groups_list = "${var.definition["definitions"]}"    
+      }
+    EOT  
+  }
+}
+
+resource "local_file" "filecreator_1" {
+  count = ${var.definition["deploy_target"] == "resourcegroups" ? 1 : 0} 
+  content = "${element(data.template_file.resource_resourcegroups.*.rendered, count.index)}"
+  filename = "../analyze/mdr${count.index}/run/main.tf"
+  depends_on = ["data.template_file.resource_resourcegroups"]
+}
