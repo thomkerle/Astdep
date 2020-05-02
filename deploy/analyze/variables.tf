@@ -1,3 +1,3 @@
-variable "module_def" {
+variable "module" {
   type = list
 }
