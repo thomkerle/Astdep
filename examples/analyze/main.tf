@@ -37,7 +37,28 @@ resource "null_resource" "cattotemplate" {
   count = length(var.module)-1
   provisioner "local-exec" {
     working_dir = "."
-    command = "cat ../analyse/templates/creationtmpls.templ ../analyze/mdr${count.index}/main.tf"
+    command = "cat ../analyze/templates/creationtmpls.templ ../analyze/mdr${count.index}/main.tf"
   }
   depends_on=["local_file.filecreator_2"]
 }
+
+resource "null_resource" "terraform-init" {
+    count = length(var.module)-1
+    provisioner "local-exec" {
+      working_dir = "../analyze/mdr{count.index}"
+      command = "terraform init"
+    }
+    depends_on = ["null_resource.movevariables"]
+}
+
+
+
+resource "null_resource" "terraform-apply" {
+    count = length(var.module)-1
+    provisioner "local-exec" {
+      working_dir = "../analyze/mdr{count.index}"
+      command = "terraform apply -auto-approve"
+    }    
+    depends_on = ["null_resource.terraform-init"]
+}
+
