@@ -1,3 +1,3 @@
 variable "module" {
-    type = "list"
+    type = list
 }
