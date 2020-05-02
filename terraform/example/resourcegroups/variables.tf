@@ -1,3 +1,3 @@
 variable "resource_groups" {
-  type = list
+  type = "list"
 }
