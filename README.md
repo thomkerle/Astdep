@@ -39,7 +39,7 @@ in progress...
 
 [![](https://www.paypalobjects.com/en_US/CH/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6JTJWCRCSKS8G)
 
-
+https://paypal.me/thomkerle
 
 
 
