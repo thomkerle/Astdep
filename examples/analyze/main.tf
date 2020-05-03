@@ -1,22 +1,16 @@
-# Splits up the variables in module definition file
-resource "null_resource" "splitter" {
-   count = length(var.module)-1
-   triggers = {
-      sublist = jsonencode(var.module[count.index+1])
-   }
-}
-
 data "template_file" "variablefiletemplate" {
   count = length(var.module)-1
   template = "$${templateText}"
   vars = {
     templateText = <<EOT
-       variables "definition" {
+       variable "definition" {
           type = map
+       }
+      
+       variable "data" {
        }
     EOT  
   }
-  depends_on = ["null_resource.splitter"]
 }
 
 resource "local_file" "filecreator_1" {
