@@ -7,6 +7,13 @@ resource "null_resource" "splitter" {
    }
 }
 
+resource "null_resource" "keys" {
+   count = length(var.module)-1
+   triggers = {
+      mkeys = keys(var.module[count.index+1])
+   }
+}
+
 # Creates terraform modules for each resource to create in the module definition 
 data "template_file" "resourcetaskcreator" {
   count = length(var.module)-1
@@ -16,10 +23,12 @@ data "template_file" "resourcetaskcreator" {
       module "create-resource-${count.index}" {
         source = "./analyze/mdr${count.index}/run"
         definiton = local.definition
+        hasdata = local.hasdata
       }
       
       locals {
         definition = ${null_resource.splitter[count.index+1].triggers.sublist}
+        hasdata = ${contains(null_resource.splitter[count.index+1].triggers.keys,"data")}
       }
    EOT  
   }
