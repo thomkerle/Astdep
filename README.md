@@ -33,7 +33,9 @@ in discussion...
 
 ## Changelog
 
-in progress...
+[0] 
+[1] 05-06-2020 Checked in code for /examples - not yet implemented dynamic data requests
+
 
 ## Donations
 
