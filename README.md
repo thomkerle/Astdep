@@ -33,8 +33,9 @@ in discussion...
 
 ## Changelog
 
-[0] 
-[1] 05-06-2020 Checked in code for /examples - not yet implemented dynamic data requests
+in development
+[0] 04-09-2020 Formulation of concept - write some WIKI articles - nothing to run yet 
+[1] 05-06-2020 Checked in code for /examples - not yet implemented dynamic data requests - should run
 
 
 ## Donations
