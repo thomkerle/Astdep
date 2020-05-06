@@ -1,56 +1,35 @@
-data "template_file" "variablefiletemplate" {
-  count = length(var.module)-1
-  template = "$${templateText}"
-  vars = {
-    templateText = <<EOT
+# Template related stuff
+
+locals {
+    templateText= <<EOT
        variable "definition" {
-          type = map
        }
       
-       variable "data" {
+       variable "hasdata" {
        }
     EOT  
-  }
 }
 
-resource "local_file" "filecreator_1" {
+
+data "template_file" "variablefiletemplate2" {
   count = length(var.module)-1
-  content = "${element(data.template_file.variablefiletemplate.*.rendered, count.index)}"
-  filename = "../analyze/mdr${count.index}/variables.tf"
-  depends_on = ["data.template_file.variablefiletemplate"]
+  template = "${local.templateText}" 
 }
+
 
 resource "local_file" "filecreator_2" {
   count = length(var.module)-1
-  content = "${element(data.template_file.variablefiletemplate.*.rendered, count.index)}"
+  content = "${element(data.template_file.variablefiletemplate2.*.rendered, count.index)}"
   filename = "../analyze/mdr${count.index}/run/variables.tf"
-  depends_on = ["local_file.filecreator_1"]
 }
+
 
 resource "null_resource" "cattotemplate" {
   count = length(var.module)-1
   provisioner "local-exec" {
     working_dir = "."
-    command = "cat ../analyze/templates/creationtmpls.tmpl >> ../analyze/mdr${count.index}/main.tf"
+    command = "cat ../analyze/templates/creationtmpls.tmpl ../analyze/mdr${count.index}/main.tf  >> ../analyze/mdr${count.index}/temp.txt && mv ../analyze/mdr${count.index}/temp.txt ../analyze/mdr${count.index}/main.tf"
   }
-  depends_on=["local_file.filecreator_2"]
 }
 
-resource "null_resource" "terraform-init" {
-    count = length(var.module)-1
-    provisioner "local-exec" {
-      working_dir = "../analyze/mdr{count.index}"
-      command = "terraform init"
-    }
-    depends_on = ["null_resource.cattotemplate"]
-}
-
-resource "null_resource" "terraform-apply" {
-    count = length(var.module)-1
-    provisioner "local-exec" {
-      working_dir = "../analyze/mdr{count.index}"
-      command = "terraform apply -auto-approve"
-    }    
-    depends_on = ["null_resource.terraform-init"]
-}
 
