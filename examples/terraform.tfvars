@@ -1,4 +1,3 @@
-
 module = [
     {
         name = "mymodule_1"
@@ -40,6 +39,28 @@ module = [
                 resource_group_name = "rsg_number_1"
                 virtual_network_name = "myvnet"
                 address_prefix = "10.0.2.0/24"
+            }
+        ]
+    },
+    {
+        deploy_target = "network_interfaces"
+
+        datas = [
+            {
+                data_target = "subnet"
+                name = "mysubnetname"
+                virtual_network_name = "myvnet"
+                resource_group_name = "rsg_number_1"
+            }   
+        ]
+        definitions = [
+            {
+                name = "interface1"
+                location = "westeurope"
+                resourcegroup_name = "rsg_number_1"
+                ip_configuration_name = "myipConfig"
+                ip_configuration_subnet_id = "data.azurerm_subnet.test.id"
+                ip_configuration_private_ip_address_allocation = "Dynamic"
             }
         ]
     }
