@@ -1,62 +1,66 @@
-# resource groups creator
-data "template_file" "resource_resourcegroups" {
-  count = ${var.definition["deploy_target"] == "resourcegroups" ? 1 : 0} 
-  template = "$${templateText}"
-  vars = {
-    templateText = <<EOT
+locals {
+    templateTextRsg = <<EOT
+      provider "azurerm" {
+          features {}
+      }
+
       module "create-resource-groups" {
-          source = "../../../../../../terraform/example/resourcegroups"
+          source = "../../../../terraform/example/resourcegroups"
           resource_groups = var.definition["definitions"]    
       }
     EOT  
-  }
+
 }
 
 resource "local_file" "filecreator_1" {
-  count = ${var.definition["deploy_target"] == "resourcegroups" ? 1 : 0} 
-  content = "${element(data.template_file.resource_resourcegroups.*.rendered, count.index)}"
-  filename = "../run/main.tf"
-  depends_on = ["data.template_file.resource_resourcegroups"]
+  count = "${local.deploy_target == "resourcegroups" ? 1 : 0}" 
+  content = "${local.templateTextRsg}"
+  filename = "./run/main.tf"
+ 
 }
 
-# virtual network creator
-data "template_file" "resource_virtualnetworks" {
-  count = ${var.definition["deploy_target"] == "virtualnetworks" ? 1 : 0} 
-  template = "$${templateText}"
-  vars = {
-    templateText = <<EOT
+locals {
+    templateTextVNET = <<EOT
+      provider "azurerm" {
+        features {}
+      }
+
       module "create-virtual-networks" {
-          source = "../../../../../../terraform/example/virtualnetwork"
-          virtual_networks = var.definition["definitions"]    
+          source = "../../../../terraform/example/virtualnetwork"
+          virtual_networks = var.definition["definitions"]      
       }
     EOT  
-  }
+
 }
 
 resource "local_file" "filecreator_2" {
-  count = ${var.definition["deploy_target"] == "virtualnetworks" ? 1 : 0} 
-  content = "${element(data.template_file.resource_virtualnetworks.*.rendered, count.index)}"
-  filename = "../run/main.tf"
-  depends_on = ["data.template_file.resource_virtualnetworks"]
+  count = "${local.deploy_target == "virtualnetworks" ? 1 : 0}" 
+  content = "${local.templateTextVNET}"
+  filename = "./run/main.tf"
 }
 
-# subnets creator
-data "template_file" "resource_subnets" {
-  count = ${var.definition["deploy_target"] == "subnets" ? 1 : 0} 
-  template = "$${templateText}"
-  vars = {
-    templateText = <<EOT
+
+locals {
+ templateTextSubnets = <<EOT
+
+      provider "azurerm" {
+        features {}
+      }
+
       module "create-subnets" {
-          source = "../../../../../../terraform/example/subnets"
-          subnets = var.definition["definitions"]    
+          source = "../../../../terraform/example/subnets"
+          subnets = var.definition["definitions"]      
       }
     EOT  
-  }
+
 }
 
+
 resource "local_file" "filecreator_3" {
-  count = ${var.definition["deploy_target"] == "subnets" ? 1 : 0} 
-  content = "${element(data.template_file.resource_virtualnetworks.*.rendered, count.index)}"
-  filename = "../run/main.tf"
-  depends_on = ["data.template_file.resource_subnets"]
+  count = "${local.deploy_target == "subnets" ? 1 : 0}" 
+  content = "${local.templateTextSubnets}"
+  filename = "./run/main.tf"
 }
+
+
+
